@@ -266,3 +266,15 @@ cargo-check-macos:
     - sccache -s
   tags:
     - osx
+
+check-rustdoc:
+  stage:                           test
+  extends:
+    - .docker-env
+    - .test-refs
+  variables:
+    SKIP_WASM_BUILD:               1
+    RUSTDOCFLAGS:                  "-Dwarnings"
+  script:
+    - time cargo +nightly doc --workspace --all-features --verbose --no-deps
+    - sccache -s

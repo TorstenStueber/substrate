@@ -32,4 +32,20 @@ test-dependency-rules:
   script:
     - ./scripts/ci/gitlab/ensure-deps.sh
 
+test-prometheus-alerting-rules:
+  stage:                           check-prom
+  extends:                         .kubernetes-env
+  variables:
+    CI_IMAGE:                      "paritytech/tools:latest"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        - .gitlab-ci.yml
+        - ./scripts/ci/monitoring/**/*
+  script:
+    - promtool check rules ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml
+    - cat ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml |
+        promtool test rules ./scripts/ci/monitoring/alerting-rules/alerting-rule-tests.yaml
 

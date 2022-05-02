@@ -166,6 +166,23 @@ skip-if-draft:
 
 include: scripts/ci/gitlab/pipeline/check.yml
 
+test-prometheus-alerting-rules:
+  stage:                           check
+  extends:                         .kubernetes-env
+  variables:
+    CI_IMAGE:                      "paritytech/tools:latest"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "pipeline"
+      when: never
+    - if: $CI_COMMIT_BRANCH
+      changes:
+        - .gitlab-ci.yml
+        - ./scripts/ci/monitoring/**/*
+  script:
+    - promtool check rules ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml
+    - cat ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml |
+        promtool test rules ./scripts/ci/monitoring/alerting-rules/alerting-rule-tests.yaml
+
 #### stage:                        test
 
 include: scripts/ci/gitlab/pipeline/test.yml
@@ -205,7 +222,6 @@ check-dependent-cumulus:
     DEPENDENT_REPO:                cumulus
     EXTRA_DEPENDENCIES:            polkadot
 
-
 build-linux-substrate:
   stage:                           build
   extends:
@@ -231,7 +247,6 @@ build-linux-substrate:
     - cp -r ./scripts/ci/docker/substrate.Dockerfile ./artifacts/substrate/
     - printf '\n# building node-template\n\n'
     - ./scripts/ci/node-template-release.sh ./artifacts/substrate/substrate-node-template.tar.gz
-
 
 .build-subkey:
   stage:                           build

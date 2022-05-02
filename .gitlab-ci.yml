@@ -164,23 +164,6 @@ skip-if-draft:
 
 #### stage:                        check
 
-test-prometheus-alerting-rules:
-  stage:                           check
-  extends:                         .kubernetes-env
-  variables:
-    CI_IMAGE:                      "paritytech/tools:latest"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "pipeline"
-      when: never
-    - if: $CI_COMMIT_BRANCH
-      changes:
-        - .gitlab-ci.yml
-        - ./scripts/ci/monitoring/**/*
-  script:
-    - promtool check rules ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml
-    - cat ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml |
-        promtool test rules ./scripts/ci/monitoring/alerting-rules/alerting-rule-tests.yaml
-
 include: scripts/ci/gitlab/pipeline/check.yml
 
 #### stage:                        test

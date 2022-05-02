@@ -164,7 +164,7 @@ skip-if-draft:
 
 #### stage:                        check
 
-include: ./scripts/ci/gitlab/pipeline/check.yml
+include: scripts/ci/gitlab/pipeline/check.yml
 
 #### stage:                        test
 

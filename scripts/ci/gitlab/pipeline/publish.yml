@@ -48,6 +48,7 @@ publish-docker-subkey:
   stage:                           publish
   extends:                         .build-push-docker-image
   needs:
+    - job:                         build-subkey-linux
       artifacts:                   true
   variables:
     PRODUCT:                       subkey

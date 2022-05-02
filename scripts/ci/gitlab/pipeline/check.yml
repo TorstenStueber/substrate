@@ -33,7 +33,7 @@ test-dependency-rules:
     - ./scripts/ci/gitlab/ensure-deps.sh
 
 test-prometheus-alerting-rules:
-  stage:                           check-prom
+  stage:                           check
   extends:                         .kubernetes-env
   variables:
     CI_IMAGE:                      "paritytech/tools:latest"

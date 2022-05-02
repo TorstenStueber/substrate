@@ -22,7 +22,6 @@
 
 stages:
   - check
-  - check-prom
   - test
   - build
   - publish

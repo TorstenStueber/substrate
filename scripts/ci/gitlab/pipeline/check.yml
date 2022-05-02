@@ -1,8 +1,8 @@
 check-runtime:
   stage:                           check
-  extends:                         .kubernetes-env
-  rules:
-    - if: $CI_COMMIT_REF_NAME =~ /^[0-9]+$/                         # PRs
+  extends:
+    - .kubernetes-env
+    - .test-refs-no-trigger-prs-only
   variables:
     CI_IMAGE:                      "paritytech/tools:latest"
     GITLAB_API:                    "https://gitlab.parity.io/api/v4"
@@ -24,11 +24,11 @@ check-signed-tag:
 
 test-dependency-rules:
   stage:                           check
-  extends:                         .kubernetes-env
+  extends:
+    - .kubernetes-env
+    - .test-refs-no-trigger-prs-only
   variables:
     CI_IMAGE:                      "paritytech/tools:latest"
-  rules:
-    - if: $CI_COMMIT_REF_NAME =~ /^[0-9]+$/                         # PRs
   script:
     - ./scripts/ci/gitlab/ensure-deps.sh
 

@@ -8,7 +8,6 @@ cargo-deny:
   after_script:
     - echo "___The complete log is in the artifacts___"
     - cargo deny check -c ./scripts/ci/deny.toml 2> deny.log
-  # TODO: add artifacts to extends
   artifacts:
     name:                          $CI_COMMIT_SHORT_SHA
     expire_in:                     3 days
@@ -211,7 +210,6 @@ test-linux-stable-int:
         &> ${CI_COMMIT_SHORT_SHA}_int_failure.log
   after_script:
     - awk '/FAILED|^error\[/,0' ${CI_COMMIT_SHORT_SHA}_int_failure.log
-  # TODO: use template for artifacts
   artifacts:
     name:                          $CI_COMMIT_SHORT_SHA
     when:                          on_failure

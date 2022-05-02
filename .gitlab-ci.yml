@@ -50,7 +50,7 @@ default:
   interruptible:                   true
   cache:                           {}
 
-.collect-artifacts:                &collect-artifacts
+.collect-artifacts:
   artifacts:
     name:                          "${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
     when:                          on_success
@@ -58,7 +58,7 @@ default:
     paths:
       - artifacts/
 
-.collect-artifacts-short:          &collect-artifacts-short
+.collect-artifacts-short:
   artifacts:
     name:                          "${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
     when:                          on_success
@@ -77,16 +77,15 @@ default:
     - cargo --version
     - rustup +nightly show
     - cargo +nightly --version
-    - sccache -s
 
-.docker-env:                       &docker-env
+.docker-env:
   image:                           "${CI_IMAGE}"
   before_script:
     - !reference [.rust-info-script, script]
   tags:
     - linux-docker
 
-.test-refs:                        &test-refs
+.test-refs:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
     - if: $CI_PIPELINE_SOURCE == "schedule"
@@ -94,7 +93,7 @@ default:
     - if: $CI_COMMIT_REF_NAME =~ /^[0-9]+$/                         # PRs
     - if: $CI_COMMIT_REF_NAME =~ /^v[0-9]+\.[0-9]+.*$/              # i.e. v1.0, v2.1rc1
 
-.test-refs-no-trigger:             &test-refs-no-trigger
+.test-refs-no-trigger:
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline"
       when: never
@@ -105,7 +104,7 @@ default:
     - if: $CI_COMMIT_REF_NAME =~ /^v[0-9]+\.[0-9]+.*$/              # i.e. v1.0, v2.1rc1
     - if: $CI_COMMIT_REF_NAME =~ /^ci-release-.*$/
 
-.test-refs-no-trigger-prs-only:   &test-refs-no-trigger-prs-only
+.test-refs-no-trigger-prs-only:
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline"
       when: never
@@ -113,7 +112,7 @@ default:
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - if: $CI_COMMIT_REF_NAME =~ /^[0-9]+$/                         # PRs
 
-.test-refs-wasmer-sandbox:                        &test-refs-wasmer-sandbox
+.test-refs-wasmer-sandbox:
   rules:
     - if: $CI_PIPELINE_SOURCE == "web"
     - if: $CI_PIPELINE_SOURCE == "schedule"
@@ -133,7 +132,7 @@ default:
         - frame/contracts/**/*
         - primitives/sandbox/**/*
 
-.build-refs:                       &build-refs
+.build-refs:
   rules:
     - if: $CI_PIPELINE_SOURCE == "pipeline"
       when: never
@@ -142,7 +141,7 @@ default:
     - if: $CI_COMMIT_REF_NAME == "master"
     - if: $CI_COMMIT_REF_NAME =~ /^v[0-9]+\.[0-9]+.*$/              # i.e. v1.0, v2.1rc1
 
-.nightly-pipeline:                 &nightly-pipeline
+.nightly-pipeline:
   rules:
     # this job runs only on nightly pipeline with the mentioned variable, against `master` branch
     - if: $CI_COMMIT_REF_NAME == "master" && $CI_PIPELINE_SOURCE == "schedule" && $PIPELINE == "nightly"
@@ -162,21 +161,11 @@ skip-if-draft:
      - echo "pipeline source is ${CI_PIPELINE_SOURCE}"
      - ./scripts/ci/gitlab/skip_if_draft.sh
 
-#### stage:                        check
-
 include:
   - scripts/ci/gitlab/pipeline/check.yml
   - scripts/ci/gitlab/pipeline/test.yml
   - scripts/ci/gitlab/pipeline/build.yml
   - scripts/ci/gitlab/pipeline/publish.yml
-
-#### stage:                        test
-
-
-#### stage:                        build
-
-
-#### stage:                        publish
 
 
 #### stage:                        deploy

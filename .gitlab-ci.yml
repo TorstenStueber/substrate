@@ -164,8 +164,6 @@ skip-if-draft:
 
 #### stage:                        check
 
-include: scripts/ci/gitlab/pipeline/check.yml
-
 test-prometheus-alerting-rules:
   stage:                           check
   extends:                         .kubernetes-env
@@ -182,6 +180,8 @@ test-prometheus-alerting-rules:
     - promtool check rules ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml
     - cat ./scripts/ci/monitoring/alerting-rules/alerting-rules.yaml |
         promtool test rules ./scripts/ci/monitoring/alerting-rules/alerting-rule-tests.yaml
+
+include: scripts/ci/gitlab/pipeline/check.yml
 
 #### stage:                        test
 

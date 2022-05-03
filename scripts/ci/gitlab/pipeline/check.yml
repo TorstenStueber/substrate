@@ -1,3 +1,6 @@
+# This file is part of .gitlab-ci.yml
+# Here are all jobs that are executed during "check" stage
+
 check-runtime:
   stage:                           check
   extends:

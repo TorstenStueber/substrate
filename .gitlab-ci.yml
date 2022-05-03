@@ -3,7 +3,10 @@
 # substrate
 #
 # pipelines can be triggered manually in the web
-
+#
+# Currently the file is divided into subfiles. Each stage has a different file which
+# can be found here: scripts/ci/gitlab/pipeline/<stage_name>.yml
+#
 # SAMPLE JOB TEMPLATE - This is not a complete example but is enough to build a
 # simple CI job. For full documentation, visit https://docs.gitlab.com/ee/ci/yaml/
 #
@@ -162,9 +165,13 @@ skip-if-draft:
      - ./scripts/ci/gitlab/skip_if_draft.sh
 
 include:
+  # check jobs
   - scripts/ci/gitlab/pipeline/check.yml
+  # tests jobs
   - scripts/ci/gitlab/pipeline/test.yml
+  # build jobs
   - scripts/ci/gitlab/pipeline/build.yml
+  # publish jobs
   - scripts/ci/gitlab/pipeline/publish.yml
 
 
